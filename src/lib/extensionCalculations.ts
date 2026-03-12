@@ -38,13 +38,6 @@ export interface ExtensionCategoryRow {
   totalCost: number;
 }
 
-export interface FoundationsBreakdown {
-  skipCost: number;
-  concreteCost: number;
-  labourCost: number;
-  labourMethod: string;
-}
-
 export interface ExtensionSummary {
   perimeterM: number;
   wallAreaGrossM2: number;

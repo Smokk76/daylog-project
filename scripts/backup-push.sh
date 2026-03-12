@@ -12,18 +12,21 @@ fi
 if [[ -z "$SOURCE_FILE" ]]; then
   SOURCE_FILE="$(ls -t "$HOME"/Downloads/roomworks-estimator-full-backup*.json 2>/dev/null | head -n 1 || true)"
 fi
-if [[ -z "$SOURCE_FILE" ]]; then
-  SOURCE_FILE="$(ls -t "$HOME"/Downloads/daylog-project*.json 2>/dev/null | head -n 1 || true)"
-fi
-if [[ -z "$SOURCE_FILE" ]]; then
-  SOURCE_FILE="$(ls -t "$HOME"/Downloads/roomworks-estimator*.json 2>/dev/null | head -n 1 || true)"
-fi
 
 if [[ -z "$SOURCE_FILE" || ! -f "$SOURCE_FILE" ]]; then
   echo "No backup file found."
   echo "Pass a path explicitly:"
   echo "npm run backup:push -- \"/path/to/daylog-project-full-backup.json\""
   echo "Legacy names like roomworks-estimator-full-backup.json are also supported."
+  exit 1
+fi
+
+SOURCE_BASENAME="$(basename "$SOURCE_FILE")"
+if [[ ! "$SOURCE_BASENAME" =~ ^(daylog-project|roomworks-estimator)-full-backup.*\.json$ ]]; then
+  echo "Invalid backup filename: $SOURCE_BASENAME"
+  echo "Expected a full backup file like:"
+  echo "- daylog-project-full-backup*.json"
+  echo "- roomworks-estimator-full-backup*.json (legacy)"
   exit 1
 fi
 

@@ -1,6 +1,7 @@
 import { ChangeEvent, DragEvent, useEffect, useMemo, useRef, useState } from "react";
 import { cloneExtensionQuote, createInitialProject, defaultSettings, moduleCatalog, normalizeProjectData, presetDoorCount } from "./data/defaults";
 import { downloadTextFile, lineItemsToCsv } from "./lib/csv";
+import { validateFullBackupImportShape, validateProjectImportShape } from "./lib/importValidation";
 import { buildLineItems, computeRoom, getQtyForWork, getRateForWork, PROJECT_SCOPE_ROOM_ID, roomTotals, summaryTotals } from "./lib/calculations";
 import { calculateExtensionQuote } from "./lib/extensionCalculations";
 import { FullBackup, ProjectSnapshot, applyFullBackup, createFullBackup, deserializeFullBackup, deserializeProject, loadBackupMeta, loadProject, loadProjectTemplates, loadSnapshots, saveBackupMeta, saveProject, saveProjectTemplate, saveSnapshot, saveUiPrefs, serializeFullBackup, serializeProject, deleteProjectTemplate, loadUiPrefs } from "./lib/storage";
@@ -234,10 +235,14 @@ export default function App() {
     try {
       localStorage.removeItem("daylog-project-v1");
       localStorage.removeItem("daylog-project-snapshots-v1");
+      localStorage.removeItem("daylog-project-templates-v1");
       localStorage.removeItem("daylog-project-ui-prefs-v1");
+      localStorage.removeItem("daylog-project-backup-meta-v1");
       localStorage.removeItem("roomworks-estimator-v1");
       localStorage.removeItem("roomworks-estimator-snapshots-v1");
+      localStorage.removeItem("roomworks-estimator-project-templates-v1");
       localStorage.removeItem("roomworks-estimator-ui-prefs-v1");
+      localStorage.removeItem("roomworks-estimator-backup-meta-v1");
     } catch (e) {
       // ignore
     }
@@ -1105,13 +1110,16 @@ export default function App() {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const next = normalizeProjectData(deserializeProject(String(reader.result ?? "")));
+        const raw = deserializeProject(String(reader.result ?? ""));
+        validateProjectImportShape(raw);
+        const next = normalizeProjectData(raw);
         persist(next, "changes from import");
         setActiveRoomId(next.rooms[0]?.id ?? null);
         setScreen("dashboard");
         setSavesMessage("Project JSON imported.");
-      } catch {
-        alert("Import failed: invalid JSON file.");
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Import failed: invalid JSON file.";
+        alert(message);
       }
     };
 
@@ -1185,9 +1193,7 @@ export default function App() {
     reader.onload = () => {
       try {
         const raw = deserializeFullBackup(String(reader.result ?? ""));
-        if (!raw || !raw.project) {
-          throw new Error("Missing project");
-        }
+        validateFullBackupImportShape(raw);
         const backup = normalizeImportedBackup(raw);
         applyFullBackup(backup);
         setProject(backup.project);
@@ -1198,8 +1204,9 @@ export default function App() {
         setScreen("dashboard");
         setSavesMessage("Full backup imported.");
         setBackupReminderVisible(false);
-      } catch {
-        alert("Full backup import failed: invalid JSON file.");
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Full backup import failed: invalid JSON file.";
+        alert(message);
       }
     };
 

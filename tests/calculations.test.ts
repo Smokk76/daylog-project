@@ -8,7 +8,7 @@ describe("computeRoom", () => {
     const room = {
       id: "r1",
       name: "Bed1",
-      level: "First" as const,
+      level: "First Floor" as const,
       lengthM: 4,
       widthM: 3,
       doorCount: 1,
@@ -29,7 +29,7 @@ describe("computeRoom", () => {
     const room = {
       id: "r2",
       name: "Bed2",
-      level: "First" as const,
+      level: "First Floor" as const,
       lengthM: 4,
       widthM: 3,
       manualFloorAreaM2: 20,

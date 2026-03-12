@@ -3,7 +3,7 @@ import { LineItemTotal } from "./calculations";
 const escapeCsv = (value: string | number | boolean): string => {
   const str = String(value ?? "");
   if (str.includes(",") || str.includes("\n") || str.includes("\"")) {
-    return `"${str.replaceAll("\"", "\"\"")}"`;
+    return `"${str.split("\"").join("\"\"")}"`;
   }
   return str;
 };

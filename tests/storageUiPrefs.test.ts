@@ -4,6 +4,8 @@ import { loadUiPrefs, saveUiPrefs } from "../src/lib/storage";
 import { UiPrefs } from "../src/types";
 
 const store = new Map<string, string>();
+const NEW_UI_PREFS_KEY = "daylog-project-ui-prefs-v1";
+const LEGACY_UI_PREFS_KEY = "roomworks-estimator-ui-prefs-v1";
 
 const localStorageMock = {
   getItem: (key: string): string | null => (store.has(key) ? store.get(key)! : null),
@@ -38,7 +40,7 @@ describe("ui prefs storage", () => {
   });
 
   it("loads empty defaults when stored JSON is invalid", () => {
-    localStorage.setItem("roomworks-estimator-ui-prefs-v1", "{not-json");
+    localStorage.setItem(NEW_UI_PREFS_KEY, "{not-json");
     const prefs = loadUiPrefs();
     assert.deepEqual(prefs, {
       collapsedLevelGroups: {},
@@ -49,6 +51,25 @@ describe("ui prefs storage", () => {
       extensionPanelsCollapsed: {},
       summaryPanelsCollapsed: {}
     });
+  });
+
+  it("loads legacy key values and promotes them to the new key", () => {
+    const legacyPrefs: UiPrefs = {
+      collapsedLevelGroups: { "Ground Floor": true },
+      dashboardPanelsCollapsed: { "project-wide-works": false },
+      roomPanelsCollapsed: { "work-checklist": true },
+      sectionsPanelsCollapsed: { "manage-sections": false },
+      savesPanelsCollapsed: { "saves-backups": false },
+      extensionPanelsCollapsed: { "extension-quoting": true },
+      summaryPanelsCollapsed: { "totals-by-room": false }
+    };
+    const legacyRaw = JSON.stringify(legacyPrefs);
+
+    localStorage.setItem(LEGACY_UI_PREFS_KEY, legacyRaw);
+    const prefs = loadUiPrefs();
+
+    assert.deepEqual(prefs, legacyPrefs);
+    assert.equal(localStorage.getItem(NEW_UI_PREFS_KEY), legacyRaw);
   });
 
   it("saves and reloads exact values", () => {
@@ -69,5 +90,6 @@ describe("ui prefs storage", () => {
     const actual = loadUiPrefs();
 
     assert.deepEqual(actual, expected);
+    assert.equal(localStorage.getItem(LEGACY_UI_PREFS_KEY), null);
   });
 });

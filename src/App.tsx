@@ -232,6 +232,9 @@ export default function App() {
     const confirmed = window.confirm("Reset stored project data and reload? This will clear project, snapshots, and UI preferences for this origin.");
     if (!confirmed) return;
     try {
+      localStorage.removeItem("daylog-project-v1");
+      localStorage.removeItem("daylog-project-snapshots-v1");
+      localStorage.removeItem("daylog-project-ui-prefs-v1");
       localStorage.removeItem("roomworks-estimator-v1");
       localStorage.removeItem("roomworks-estimator-snapshots-v1");
       localStorage.removeItem("roomworks-estimator-ui-prefs-v1");
@@ -1078,7 +1081,7 @@ export default function App() {
   };
 
   const handleExportJson = () => {
-    downloadTextFile("roomworks-estimator.json", serializeProject(project), "application/json");
+    downloadTextFile("daylog-project.json", serializeProject(project), "application/json");
     setSavesMessage("Project JSON exported.");
   };
 
@@ -1087,7 +1090,7 @@ export default function App() {
     roomMap.set(PROJECT_SCOPE_ROOM_ID, "Project-wide");
     const rows = lineItems.map((i) => ({ ...i, roomName: roomMap.get(i.roomId) ?? i.roomId }));
     const csv = lineItemsToCsv(rows);
-    downloadTextFile("roomworks-summary.csv", csv, "text/csv;charset=utf-8");
+    downloadTextFile("daylog-summary.csv", csv, "text/csv;charset=utf-8");
   };
 
   const handleImportJson = (event: ChangeEvent<HTMLInputElement>) => {
@@ -1161,7 +1164,7 @@ export default function App() {
 
   const handleExportFullBackup = () => {
     const backup = createFullBackup(project);
-    downloadTextFile("roomworks-estimator-full-backup.json", serializeFullBackup(backup), "application/json");
+    downloadTextFile("daylog-project-full-backup.json", serializeFullBackup(backup), "application/json");
     const exportedAt = new Date().toISOString();
     setLastFullBackupExportedAt(exportedAt);
     saveBackupMeta({ lastFullBackupExportedAt: exportedAt });
@@ -1260,7 +1263,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <h1>RoomWorks Estimator</h1>
+        <h1>DayLog</h1>
         <nav className="tabs">
           <button className={screen === "dashboard" ? "active" : ""} onClick={() => setScreen("dashboard")}>Dashboard</button>
           <button className={screen === "extension" ? "active" : ""} onClick={() => setScreen("extension")}>Extension</button>

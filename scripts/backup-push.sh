@@ -7,7 +7,13 @@ TARGET_FILE="$BACKUP_DIR/main-backup.json"
 
 SOURCE_FILE="${1:-}"
 if [[ -z "$SOURCE_FILE" ]]; then
+  SOURCE_FILE="$(ls -t "$HOME"/Downloads/daylog-project-full-backup*.json 2>/dev/null | head -n 1 || true)"
+fi
+if [[ -z "$SOURCE_FILE" ]]; then
   SOURCE_FILE="$(ls -t "$HOME"/Downloads/roomworks-estimator-full-backup*.json 2>/dev/null | head -n 1 || true)"
+fi
+if [[ -z "$SOURCE_FILE" ]]; then
+  SOURCE_FILE="$(ls -t "$HOME"/Downloads/daylog-project*.json 2>/dev/null | head -n 1 || true)"
 fi
 if [[ -z "$SOURCE_FILE" ]]; then
   SOURCE_FILE="$(ls -t "$HOME"/Downloads/roomworks-estimator*.json 2>/dev/null | head -n 1 || true)"
@@ -16,7 +22,8 @@ fi
 if [[ -z "$SOURCE_FILE" || ! -f "$SOURCE_FILE" ]]; then
   echo "No backup file found."
   echo "Pass a path explicitly:"
-  echo "npm run backup:push -- \"/path/to/roomworks-estimator-full-backup.json\""
+  echo "npm run backup:push -- \"/path/to/daylog-project-full-backup.json\""
+  echo "Legacy names like roomworks-estimator-full-backup.json are also supported."
   exit 1
 fi
 

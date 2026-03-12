@@ -14,7 +14,7 @@ if [[ ! -f "$SOURCE_FILE" ]]; then
 fi
 
 STAMP="$(date +%Y-%m-%d_%H-%M-%S)"
-TARGET_FILE="$HOME/Downloads/roomworks-estimator-restored-$STAMP.json"
+TARGET_FILE="$HOME/Downloads/daylog-project-restored-$STAMP.json"
 cp "$SOURCE_FILE" "$TARGET_FILE"
 
 echo "Restored backup copied to:"

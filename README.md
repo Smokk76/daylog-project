@@ -1,6 +1,6 @@
-# RoomWorks Estimator (MVP)
+# DayLog (MVP)
 
-Single-page React + TypeScript app for UK residential labour-only room estimating.
+Single-page React + TypeScript app for DayLog construction estimating.
 
 ## Features
 - Project dashboard with rooms grouped by level
@@ -16,7 +16,7 @@ Single-page React + TypeScript app for UK residential labour-only room estimatin
 - Preloaded sample project including excluded Kitchen/Bathroom/Conservatory
 
 ## Run locally
-1. `cd /Users/igorkaminski/Documents/codex/roomworks-estimator`
+1. `cd /Users/igorkaminski/Documents/GitHub/daylog-project`
 2. `npm install`
 3. `npm run dev`
 4. Open the local URL shown by Vite
@@ -36,7 +36,8 @@ Use this if you want a backup copy stored in your GitHub repo.
 4. In the app Saves screen, click `Import Full Backup`.
 
 You can also pass a specific file to push:
-- `npm run backup:push -- "/absolute/path/to/roomworks-estimator-full-backup.json"`
+- `npm run backup:push -- "/absolute/path/to/daylog-project-full-backup.json"`
+- Transition support: legacy names like `roomworks-estimator-full-backup*.json` are still accepted.
 
 ## Help: Backup and Recovery Manual
 
@@ -46,20 +47,20 @@ Use this when you want a safe copy in GitHub in case your laptop is lost.
 1. Open the app and go to Saves.
 2. Click `Export Full Backup`.
 3. In Terminal run:
-   - `cd /Users/igorkaminski/Documents/codex/roomworks-estimator`
-   - `npm run backup:push -- "/Users/igorkaminski/Downloads/roomworks-estimator-full-backup.json"`
+   - `cd /Users/igorkaminski/Documents/GitHub/daylog-project`
+   - `npm run backup:push -- "/Users/igorkaminski/Downloads/daylog-project-full-backup.json"`
 4. This updates `backups/main-backup.json`, commits, and pushes to GitHub.
 
-Tip: if your downloaded filename is different, use that exact file path.
+Tip: if your downloaded filename is different, use that exact file path (legacy `roomworks-estimator-*` names still work during transition).
 
 ### 2) Pull full backup from GitHub (new laptop / recovery)
 Use this to restore the backup from GitHub onto a machine.
 
 1. In Terminal run:
-   - `cd /Users/igorkaminski/Documents/codex/roomworks-estimator`
+   - `cd /Users/igorkaminski/Documents/GitHub/daylog-project`
    - `npm run backup:pull`
 2. This pulls from GitHub and copies a restore file into Downloads:
-   - `roomworks-estimator-restored-YYYY-MM-DD_HH-MM-SS.json`
+   - `daylog-project-restored-YYYY-MM-DD_HH-MM-SS.json`
 3. Open the app and click `Import Full Backup` in Saves.
 4. Select that restored file from Downloads.
 
@@ -94,12 +95,12 @@ Use this to restore the backup from GitHub onto a machine.
 Practice this once so recovery is easy under pressure.
 
 1. In Terminal:
-   - `cd /Users/igorkaminski/Documents/codex/roomworks-estimator`
+   - `cd /Users/igorkaminski/Documents/GitHub/daylog-project`
    - `npm run backup:pull`
 2. Start app:
    - `npm run dev -- --host --port 5173 --strictPort`
 3. Open `http://localhost:5173`, go to Saves, click `Import Full Backup`.
-4. Select the restored file from Downloads (`roomworks-estimator-restored-...json`).
+4. Select the restored file from Downloads (`daylog-project-restored-...json`; older `roomworks-estimator-restored-...json` files still import if you already have one).
 5. Confirm data appears:
    - project totals
    - templates list
